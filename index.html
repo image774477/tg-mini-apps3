@@ -1,0 +1,419 @@
+﻿<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mass Effect Legendary Edition — Road to Platinum</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:var(--tg-theme-bg-color,#09111c);--tx:var(--tg-theme-text-color,#eef7ff);--mut:var(--tg-theme-hint-color,#93a5bc);--ac:var(--tg-theme-button-color,#35c8ff);--btn-tx:var(--tg-theme-button-text-color,#04111b);--lnk:var(--tg-theme-link-color,#9fe6ff);--card:var(--tg-theme-secondary-bg-color,rgba(255,255,255,.08));--bd:rgba(255,255,255,.16)}
+*{box-sizing:border-box}html,body{margin:0;padding:0;scroll-behavior:smooth}
+body{font-family:"Space Grotesk","Segoe UI",sans-serif;color:var(--tx);background:radial-gradient(1000px 620px at 10% -10%,rgba(53,200,255,.22),transparent 58%),radial-gradient(840px 640px at 100% 8%,rgba(58,255,195,.14),transparent 56%),radial-gradient(700px 520px at 50% 110%,rgba(97,127,255,.14),transparent 60%),var(--bg);line-height:1.55;padding:0 0 max(16px,env(safe-area-inset-bottom))}
+.wrap{width:min(1180px,100% - 24px);margin:0 auto}
+.scene{min-height:86vh;display:flex;align-items:center;scroll-margin-top:72px;opacity:.45;transform:translateY(16px);transition:.35s}
+.scene.show{opacity:.92;transform:none}.scene.active{opacity:1}
+.hero{padding:28px 0 40px;display:grid;gap:12px;align-content:end}
+.kicker{display:inline-block;width:max-content;padding:.3rem .7rem;border:1px solid var(--bd);border-radius:999px;background:var(--card);font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+h1,h2,h3{margin:0;line-height:1.15}h1{font-family:"Russo One",sans-serif;font-size:clamp(1.7rem,4vw,3.4rem);max-width:16ch}
+p{margin:.2rem 0 .9rem;color:color-mix(in srgb,var(--tx) 87%,var(--mut))}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.st{border:1px solid var(--bd);border-radius:12px;background:var(--card);padding:.7rem .8rem}.st b{display:block;font-size:1.25rem}.st span{font-size:.82rem;color:var(--mut)}
+.warn{border-left:4px solid var(--ac);background:var(--card);border-radius:10px;padding:.75rem .8rem}
+.layout{display:grid;grid-template-columns:minmax(260px,330px) 1fr;gap:18px;align-items:start}
+#mpeek{display:none;position:fixed;left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom) + 8px);z-index:120;border:1px solid var(--bd);border-radius:12px;background:var(--bg);box-shadow:0 10px 22px rgba(0,0,0,.42);padding:.44rem .58rem;opacity:0;transform:translateY(12px) scale(.985);pointer-events:none;transition:opacity .22s ease,transform .22s ease}
+#mpeek.show{opacity:1;transform:translateY(0) scale(1)}
+.mpeek-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.2rem}
+.mpeek-top small{color:var(--mut);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}
+.mpeek-top b{font-size:.82rem;color:var(--tx)}
+.mpeek-title{font-size:.86rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mpbar{height:6px;border-radius:999px;background:rgba(255,255,255,.18);overflow:hidden;margin-top:.35rem}
+.mpfill{height:100%;width:0;background:linear-gradient(90deg,#35c8ff,#6be2ff,#8affc7);transition:width .32s}
+#hud{position:sticky;top:max(8px,env(safe-area-inset-top));border:1px solid var(--bd);border-radius:16px;background:linear-gradient(160deg,rgba(255,255,255,.12),rgba(255,255,255,.05));padding:.9rem;backdrop-filter:blur(12px)}
+#hud small{color:var(--mut);letter-spacing:.08em;text-transform:uppercase}
+#hud h3{font-size:1.06rem;margin:.2rem 0 .45rem}
+.meta{display:grid;gap:6px;margin:.5rem 0}.meta div{border:1px solid rgba(255,255,255,.08);border-radius:9px;background:rgba(0,0,0,.15);padding:.45rem .52rem;font-size:.85rem}
+.meta b{display:block;color:var(--mut);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.06rem}
+.bar{position:relative;height:10px;border-radius:999px;overflow:hidden;background:color-mix(in srgb,var(--tx) 14%,transparent);border:1px solid color-mix(in srgb,var(--tx) 26%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--tx) 10%,transparent)}
+.bar:before{content:"";position:absolute;inset:0;z-index:0;opacity:.02;background:repeating-linear-gradient(135deg,transparent 0 10px,color-mix(in srgb,var(--tx) 5%,transparent) 10px 20px)}
+.bar.empty{border-style:solid;border-color:color-mix(in srgb,var(--tx) 24%,transparent);background:color-mix(in srgb,var(--tx) 12%,transparent)}
+.bar.empty:before{opacity:.12}
+.fill{position:relative;z-index:1;height:100%;width:0;background:linear-gradient(90deg,#35c8ff,#6be2ff,#8affc7);transition:width .32s}
+.row{display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:var(--mut);margin:.45rem 0}
+.ring{--a:0deg;position:relative;width:86px;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;margin:.75rem 0;background:conic-gradient(var(--ac) var(--a),color-mix(in srgb,var(--tx) 18%,transparent) 0);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--tx) 24%,transparent),0 6px 16px rgba(0,0,0,.14)}
+.ring.empty{background:conic-gradient(color-mix(in srgb,var(--tx) 22%,transparent) 1turn,color-mix(in srgb,var(--tx) 22%,transparent) 1turn);border:2px dashed color-mix(in srgb,var(--tx) 54%,transparent);box-shadow:inset 0 0 0 10px color-mix(in srgb,var(--tx) 20%,transparent),0 6px 16px rgba(0,0,0,.14)}
+.ring:before{content:"";width:63px;aspect-ratio:1;border-radius:50%;background:color-mix(in srgb,var(--bg) 92%,var(--tx) 8%);border:1px solid color-mix(in srgb,var(--tx) 24%,transparent)}
+.ring span{position:absolute;font-size:.73rem;font-weight:700}
+#timeline{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:.7rem 0}
+#timeline button{border:1px solid var(--bd);border-radius:9px;background:rgba(0,0,0,.16);color:var(--mut);font:700 .68rem/1 "Space Grotesk",sans-serif;min-height:36px;cursor:pointer}
+#timeline button.on{background:var(--ac);color:#02111c;border-color:transparent}
+#hlist{margin:.2rem 0 0;padding:0;list-style:none;display:grid;gap:4px}#hlist li{padding-left:13px;position:relative;font-size:.84rem}#hlist li:before{content:"◆";position:absolute;left:0;top:1px;font-size:.62rem;color:var(--ac)}
+.card{width:100%;border:1px solid var(--bd);border-radius:16px;background:linear-gradient(156deg,rgba(255,255,255,.14),rgba(255,255,255,.05));padding:clamp(14px,2.2vw,22px)}
+.card h2{font-family:"Space Grotesk","Segoe UI",sans-serif;font-weight:600;font-size:clamp(1.2rem,2.5vw,1.9rem);margin-bottom:.45rem}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:.7rem 0}.tags span{border:1px solid var(--bd);border-radius:999px;padding:.18rem .58rem;background:rgba(0,0,0,.15);font-size:.77rem}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ul{margin:0;padding-left:1.1rem;display:grid;gap:4px}
+.nodes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.node{border:1px solid var(--bd);border-radius:10px;padding:.55rem;background:rgba(0,0,0,.14)}.node h4{margin:0 0 .25rem;color:var(--lnk);font-size:.9rem}.node p{margin:0;font-size:.81rem}
+.splits{list-style:none;padding:0;margin:0;display:grid;gap:5px}.splits li{border:1px solid var(--bd);border-radius:9px;padding:.42rem .54rem;background:rgba(0,0,0,.13);font-size:.85rem}.splits li time{font-weight:700;color:var(--lnk);margin-right:.4rem;font-variant-numeric:tabular-nums}
+.code{border:1px dashed rgba(255,255,255,.35);border-radius:9px;padding:.5rem .6rem;background:rgba(0,0,0,.18);font-size:.84rem}
+.phaseImg{display:block;width:100%;max-width:100%;height:auto;border:1px solid var(--bd);border-radius:12px;background:rgba(255,255,255,.04);margin:.7rem 0 .8rem}
+.phaseChk{margin-top:.86rem;border:2px solid color-mix(in srgb,var(--ac) 70%,#ffe38b 30%);border-radius:13px;padding:.68rem;background:rgba(255,255,255,.05);box-shadow:none}
+.phaseChkHead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:.45rem}
+.phaseChkHead span{font-size:.76rem;text-transform:uppercase;letter-spacing:.08em;color:var(--lnk);font-weight:700}
+.phaseChkHead b{font-size:.8rem;color:var(--tx)}
+.phaseTodo{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.phaseTodo label{display:grid;grid-template-columns:auto 1fr;gap:.5rem;align-items:start;border:1px solid rgba(255,255,255,.22);border-radius:10px;padding:.43rem .52rem;background:rgba(0,0,0,.2);font-size:.87rem;font-weight:500}
+.phaseTodo input{margin-top:.18rem;accent-color:var(--ac)}
+.chk{border:1px solid var(--bd);border-radius:12px;padding:.75rem;background:rgba(0,0,0,.14);margin-top:.8rem}.chkhead{display:flex;justify-content:space-between;align-items:center;color:var(--mut);font-size:.84rem;margin-bottom:.45rem}
+.chkHint{margin:.12rem 0 .65rem;color:color-mix(in srgb,var(--tx) 86%,var(--mut));font-size:.84rem}
+.todo{margin:0;padding:0;list-style:none;display:grid;gap:5px}.todo label{display:grid;grid-template-columns:auto 1fr;gap:.5rem;align-items:start;border:1px solid rgba(255,255,255,.15);border-radius:9px;padding:.38rem .48rem;background:rgba(255,255,255,.04);font-size:.84rem}.todo input{margin-top:.17rem;accent-color:var(--ac)}
+.todo-all label{background:rgba(255,255,255,.06)}
+.todo .ph{display:block;color:var(--lnk);font-size:.72rem;letter-spacing:.05em;margin-top:.12rem}
+.phaseDeep{margin-top:.9rem;border:1px dashed rgba(159,230,255,.32);border-radius:12px;background:rgba(255,255,255,.03);padding:.55rem}
+.phaseDeep h3{margin:.05rem 0 .5rem;font-family:"Space Grotesk","Segoe UI",sans-serif;font-size:.9rem;font-weight:600;color:var(--lnk)}
+.pdfAcc{border:1px solid rgba(255,255,255,.16);border-radius:11px;background:rgba(255,255,255,.04)}
+.pdfAcc+.pdfAcc{margin-top:.5rem}
+.pdfAcc summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;gap:10px;align-items:center;padding:.52rem .62rem;font-weight:600}
+.pdfAcc summary::-webkit-details-marker{display:none}
+.pdfAcc summary span{color:var(--lnk)}
+.pdfAcc summary small{color:var(--mut);font-weight:500}
+.pdfAcc summary::after{content:'+';font-weight:700;color:var(--mut)}
+.pdfAcc[open] summary::after{content:'−'}
+.pdfAccBody{padding:.02rem .62rem .62rem}
+.pdfAccBody p{margin:0 0 .58rem;color:color-mix(in srgb,var(--tx) 90%,var(--mut));font-size:.86rem;line-height:1.45}
+.pdfAccBody p:last-child{margin-bottom:0}
+.accCollapseWrap{display:flex;justify-content:flex-end;margin-top:.55rem;padding-top:.45rem;border-top:1px dashed color-mix(in srgb,var(--tx) 24%,transparent)}
+.accCollapse{border:1px solid color-mix(in srgb,var(--tx) 30%,transparent);background:color-mix(in srgb,var(--bg) 90%,var(--tx) 10%);color:var(--tx);border-radius:10px;padding:.34rem .7rem;font:600 .82rem/1 "Space Grotesk","Segoe UI",sans-serif;cursor:pointer;opacity:.92;transition:filter .18s ease,transform .18s ease}
+.accCollapse:hover{filter:brightness(1.04)}
+.accCollapse:active{transform:translateY(1px)}
+.todo small{display:block;color:var(--mut);font-size:.73rem}.rst{margin-top:.55rem;border:1px solid var(--bd);background:transparent;color:var(--tx);padding:.35rem .58rem;border-radius:9px;cursor:pointer}
+#winModal{position:fixed;inset:0;z-index:300;display:grid;place-items:center;padding:20px;background:rgba(0,0,0,.55);opacity:0;pointer-events:none;transition:opacity .24s ease}
+#winModal.show{opacity:1;pointer-events:auto}
+.winCard{width:min(420px,100%);border:1px solid var(--bd);border-radius:16px;background:var(--bg);padding:16px 16px 14px;box-shadow:0 20px 38px rgba(0,0,0,.5)}
+.winCard h3{margin:0 0 8px;font-family:"Space Grotesk","Segoe UI",sans-serif;font-weight:600;font-size:1.22rem;letter-spacing:.01em}
+.winCard p{margin:0 0 12px;color:color-mix(in srgb,var(--tx) 88%,var(--mut))}
+.winBadge{display:block;width:100%;max-height:44vh;object-fit:contain;border:1px solid var(--bd);border-radius:12px;background:rgba(255,255,255,.03);margin:0 0 10px}
+.winNote{display:block;font-size:.78rem;color:var(--mut);letter-spacing:.03em;margin:-2px 0 10px}
+.winActions{display:flex;gap:8px;flex-wrap:wrap}
+.winActions a,.winActions button{border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);padding:8px 12px;font-weight:700;cursor:pointer;text-decoration:none;transition:filter .18s ease,transform .18s ease}
+#winDownload{background:var(--tg-theme-button-color,#35c8ff);color:var(--btn-tx);border-color:transparent;box-shadow:0 8px 18px color-mix(in srgb,var(--tg-theme-button-color,#35c8ff) 38%,transparent)}
+#winDownload:hover{filter:brightness(1.03)}
+#winDownload:active{transform:translateY(1px);filter:brightness(.96)}
+.winActions #winClose{background:transparent}
+.winCard button{border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);padding:8px 12px;font-weight:700;cursor:pointer}
+.madeBy{display:flex;align-items:center;justify-content:center;gap:.35rem;margin:8px 0 2px;font-size:.84rem;line-height:1}
+.madeByBrand{display:inline-flex;align-items:center;gap:.2rem}
+.madeByMark{display:block;height:1.04em;width:auto;object-fit:contain}
+.madeByWord{display:block;height:.92em;width:auto;object-fit:contain}
+@media (max-width:980px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.layout{grid-template-columns:1fr}#mpeek{display:block}.accCollapseWrap{justify-content:stretch}.accCollapse{width:100%;padding:.52rem .7rem}#hud{position:relative;top:auto;margin-bottom:12px;background:var(--bg);backdrop-filter:none}.meta div{background:rgba(0,0,0,.22)}#timeline{display:flex;overflow:auto}#timeline button{min-width:52px}.nodes{grid-template-columns:repeat(2,minmax(0,1fr))}.scene{min-height:74vh;opacity:1;transform:none}}
+@media (max-width:720px){.stats,.grid2,.nodes{grid-template-columns:1fr}.scene{min-height:68vh}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<header class="hero scene" id="s0" data-short="00" data-phase="Пре-брифинг" data-title="Перед стартом" data-obj="Зафиксировать один маршрут на всю трилогию и не сломать его ранними точками невозврата." data-risk="Archivist, Reaper IFF и Priority-миссии в ME3 наказывают за спешку." data-gain="Один импортируемый Шепард, идеальный финал и все платины без хаоса." data-progress="0" data-trophies="0" data-list="3 игры в одном пробеге|4 списка трофеев|Insanity I-III|7400 TMS до Cerberus HQ">
+<span class="kicker">Telegram Mini App / Scrollytelling</span>
+<h1>Mass Effect Legendary Edition — дорожная карта к платине</h1>
+<div class="stats"><div class="st"><b>3</b><span>Игры подряд</span></div><div class="st"><b>1</b><span>Шепард на импорт</span></div><div class="st"><b>Insanity</b><span>Без смены сложности</span></div><div class="st"><b>7400</b><span>TMS к финалу ME3</span></div></div>
+<p class="warn">Главный принцип: не трогайте <b>Reaper IFF</b> раньше времени, закройте <b>Archivist</b> до вылета с Цитадели и всегда оставляйте <b>Priority</b>-миссии в ME3 на конец текущего акта.</p>
+</header>
+<div id="mpeek" aria-label="Мобильный прогресс">
+  <div class="mpeek-top"><small id="mstep">Фаза 0/8</small><b id="mpercent">0%</b></div>
+  <div class="mpeek-title" id="mtitle">Перед стартом</div>
+  <div class="mpbar"><div class="mpfill" id="mfill"></div></div>
+</div>
+<div class="layout">
+<aside id="hud"><small id="hp">Пре-брифинг</small><h3 id="ht">Перед стартом</h3><p id="ho"></p>
+<div class="meta"><div><b>Риск</b><span id="hr"></span></div><div><b>Награда</b><span id="hg"></span></div></div>
+<div class="row"><span>Маршрут до платины</span><span id="hpr">0%</span></div><div class="bar" id="hbar"><div class="fill" id="hf"></div></div>
+<div class="ring" id="ring"><span id="rt">0 / 8</span></div><div id="timeline"></div><ul id="hlist"></ul></aside>
+<article>
+<section class="scene" id="s1" data-short="01" data-phase="Фаза 1/8" data-title="Один Шепард на всю трилогию" data-obj="Сразу зацементировать маршрут импорта, Insanity и романы профиля." data-risk="Смена сложности или неверный роман в ME2 ломают перекрестные достижения." data-gain="Insanity I-III, Paramour I-III и чистая цепочка импортов." data-progress="12" data-trophies="16" data-list="Импорт ME1 -> ME2 -> ME3|Insanity не менять|Paramour I-III|Профильная статистика сохраняется">
+<div class="card"><h2>1) Один маршрут вместо трех разрозненных</h2><p><i>Legendary Edition</i> лучше проходить как единую кампанию: один Шепард, три последовательных импорта, ручные сейвы перед романами и никакой смены сложности по ходу пути.</p>
+<div class="grid2"><ul><li><b>Основа:</b> создайте одного персонажа в ME1 и импортируйте его дальше без разрывов.</li><li><b>Insanity:</b> выставьте максимальную сложность еще до старта и не трогайте ее до титров ME3.</li></ul><ul><li><b>Профиль:</b> часть накопительной статистики и серия <b>Paramour</b> привязаны к профилю, а не к одному сейву.</li><li><b>Страховка:</b> держите сейвы перед Илом, <code>Omega-4 Relay</code> и <code>Priority: Cerberus Headquarters</code>.</li></ul></div>
+<div class="tags"><span>Insanity I-III</span><span>Paramour I-III</span><span>ProfileData</span><span>3 импорта</span></div><div class="phaseChk">
+<div class="phaseChkHead"><span>Чек-лист фазы</span><b>Фаза 1</b></div>
+<ul class="phaseTodo">
+<li><label><input data-k="p1_route" type="checkbox">Зафиксировал одного Шепарда под полный импорт через всю трилогию</label></li>
+<li><label><input data-k="p1_lock" type="checkbox">Залочил Insanity и оставил сейвы перед ключевыми точками невозврата</label></li>
+</ul>
+</div>
+<div class="phaseDeep" id="deep-s1"><h3>Expanded Phase Guide</h3><details class="pdfAcc"><summary><span>Почему Insanity нельзя трогать</span><small>Ключевой риск</small></summary><div class="pdfAccBody"><p>Серия трофеев <b>Insanity I-III</b> требует пройти каждую игру на максимальной сложности без единой смены параметра. Даже краткое понижение сложности в настройках обнуляет право на трофей в текущем прохождении.</p><p>Практически это означает одно правило: ставьте <b>Insanity</b> заранее и относитесь к каждому импорту как к продолжению одной и той же кампании, а не как к новому старту с правом на послабления.</p></div></details>
+<details class="pdfAcc"><summary><span>Paramour без ловушки Liara</span><small>Что помнить</small></summary><div class="pdfAccBody"><p>Самая опасная ловушка серии <b>Paramour</b> лежит во второй части: роман только с Лиарой через <i>Lair of the Shadow Broker</i> не засчитывает <b>Paramour II</b>. Для гарантии нужен роман с полноценным членом экипажа ME2.</p><p>Если хотите сохранить линию Лиары для ME3, сначала получите триггер трофея во второй части, затем разорвите временный роман и уже после этого возвращайтесь к Лиаре через DLC-сценарий.</p></div></details></div></div>
+</section>
+
+<section class="scene" id="s2" data-short="02" data-phase="Фаза 2/8" data-title="Классы и боевой каркас" data-obj="Выбрать удобный набор классов и бонусных навыков под три разные боевые системы." data-risk="Один и тот же стиль не одинаково силен в ME1, ME2 и ME3." data-gain="Стабильный Insanity-маршрут без насилия над билдом." data-progress="24" data-trophies="32" data-list="ME1: Soldier или Adept|ME2: Sentinel или Infiltrator|ME3: Vanguard|Garrus + N7 Typhoon">
+<div class="card"><h2>2) Подберите класс под конкретную игру, а не под бренд серии</h2><p>Баланс между частями меняется слишком сильно, поэтому лучше строить ожидания не вокруг любимой роли, а вокруг того, как игра считает щиты, броню, биотику и контроль.</p>
+<img class="phaseImg" src="image1.png" alt="Схема маршрута по классам и достижениям в Mass Effect Legendary Edition">
+<div class="nodes">
+<div class="node"><h4>Mass Effect 1</h4><p><b>Soldier</b> дает простую выживаемость, а <b>Adept</b> ломает бой контролем и биотикой через щиты.</p></div>
+<div class="node"><h4>Mass Effect 2</h4><p><b>Sentinel</b> безопаснее всего на Insanity: снимает все типы защиты и переживает ошибки через Tech Armor.</p></div>
+<div class="node"><h4>Mass Effect 3</h4><p><b>Vanguard</b> сверхсилен при грамотном тайминге, а Гаррус с <b>N7 Typhoon</b> превращает финал в тир.</p></div>
+</div>
+<div class="tags"><span>ME2 hardest</span><span>Tech Armor</span><span>Vanguard + Nova</span><span>God Garrus</span></div><div class="phaseChk">
+<div class="phaseChkHead"><span>Чек-лист фазы</span><b>Фаза 2</b></div>
+<ul class="phaseTodo">
+<li><label><input data-k="p2_class" type="checkbox">Выбрал понятный класс под каждую часть, а не вслепую тащу один стиль через всю трилогию</label></li>
+<li><label><input data-k="p2_bonus" type="checkbox">Подумал о бонусных навыках и фарме профильных трофеев заранее</label></li>
+</ul>
+</div>
+<div class="phaseDeep" id="deep-s2"><h3>Expanded Phase Guide</h3><details class="pdfAcc"><summary><span>Почему ME2 самая жесткая</span><small>Боевая логика</small></summary><div class="pdfAccBody"><p>Во второй части почти каждый враг на Insanity получает дополнительный слой защиты. Пока у цели есть щиты, броня или барьеры, контроль толпы работает заметно хуже или не работает совсем.</p><p>Именно поэтому <b>Sentinel</b> и <b>Infiltrator</b> считаются самыми прагматичными вариантами: первый надежно ломает защиту и переживает давление, второй дает безопасный позиционный урон и сброс агро.</p></div></details>
+<details class="pdfAcc"><summary><span>Garrus в ME3 как чит-код</span><small>Что делает сборка</small></summary><div class="pdfAccBody"><p>Если в ME3 вложить Гаррусу пассивки в урон штурмовых винтовок и дать ему <b>N7 Typhoon</b> с бронебойными патронами, он начинает плавить даже тяжелые цели быстрее, чем большинство классов игрока.</p><p>Это не отменяет аккуратного маршрута, но резко снижает цену ошибок в конце трилогии и делает добивку боевых трофеев заметно спокойнее.</p></div></details></div></div>
+</section>
+<section class="scene" id="s3" data-short="03" data-phase="Фаза 3/8" data-title="ME1: Цитадель без пропусков" data-obj="Забрать Archivist, быстро закрыть Ally-трофеи и не упустить моральные развилки." data-risk="Один пропущенный диалог на старте способен убить целое прохождение ради одного трофея." data-gain="Чистый фундамент под ME2 и свободный выбор спутников дальше." data-progress="38" data-trophies="49" data-list="Archivist до первого вылета|6 Ally за 5 заданий|Bring Down the Sky|Charm/Intimidate">
+<div class="card"><h2>3) Mass Effect 1 нужно играть медленнее, чем кажется</h2><p>Самая опасная ошибка в первой части происходит не в бою, а в диалогах на Цитадели. До первого самостоятельного вылета лучше считать игру не начавшейся, пока не закрыт <b>Archivist</b> и не собран базовый план по союзникам.</p>
+<div class="grid2"><ul><li><b>Archivist:</b> Протеане спрашиваются у Андерсона и Найлуса еще до высадки на Eden Prime.</li><li><b>Цитадель:</b> доберите Elcor, Volus, Hanar, Keepers и Rachni через нужные разговоры и терминалы Avina.</li><li><b>Batarians:</b> или ранний разговор с Андерсоном, или страховка через <i>Bring Down the Sky</i>.</li></ul><ul><li><b>Ally Achievements:</b> после вербовки Лиары все шесть союзников закрываются сериями по 5 сданных заданий.</li><li><b>Пауэр-фарм:</b> многие способности можно безопасно прокликивать по терминалам Цитадели или по Mako.</li><li><b>Мораль:</b> Charm/Intimidate приоритетнее сырого комбат-оптимизма.</li></ul></div>
+<div class="tags"><span>Archivist</span><span>6 Ally</span><span>Charismatic</span><span>X57 обязателен</span></div>
+<div class="phaseChk">
+<div class="phaseChkHead"><span>Чек-лист фазы</span><b>Фаза 3</b></div>
+<ul class="phaseTodo">
+<li><label><input data-k="p3_archivist" type="checkbox">Закрыл маршрут на Archivist до первого вылета с Цитадели</label></li>
+<li><label><input data-k="p3_me1" type="checkbox">Быстро развел Ally-трофеи, мораль и пропускаемое DLC X57 в одном цикле</label></li>
+</ul>
+</div>
+<div class="phaseDeep" id="deep-s3"><h3>Expanded Phase Guide</h3><details class="pdfAcc"><summary><span>Минимальный маршрут на Archivist</span><small>Что нельзя забыть</small></summary><div class="pdfAccBody"><p>Самые нервные записи: <b>Protheans</b> на борту Нормандии в самом начале, <b>Geth</b> через ранний разговор с Эшли, <b>Batarians</b> до первого отлета с Цитадели, а также блок через Elcor, Volus, Hanar и терминалы Avina.</p><p>Если держаться этого маршрута, трофей падает еще до того, как галактика по-настоящему откроется. Это лучший момент обезвредить самый неприятный missable всей первой игры.</p></div></details>
+<details class="pdfAcc"><summary><span>Почему Ally-трофеи теперь не страшны</span><small>Маршрутизация</small></summary><div class="pdfAccBody"><p>В Legendary Edition требования к спутникам радикально упали: теперь достаточно <b>пяти любых завершенных заданий</b> с нужным персонажем в отряде. Поэтому после спасения Лиары можно быстро сдавать пачки квестов, меняя пары спутников на борту Нормандии.</p><p>Это освобождает остальную игру от старой обязаловки и позволяет уже после раннего часа геймплея брать тех, кто реально нужен по бою или по ролеплею.</p></div></details></div></div>
+</section>
+
+<section class="scene" id="s4" data-short="04" data-phase="Фаза 4/8" data-title="ME2: всё сделать до Reaper IFF" data-obj="Подвести Нормандию и отряд к финалу без незакрытых хвостов." data-risk="Ранний Reaper IFF запускает таймер, который не прощает ни лоялки, ни жадность к побочкам." data-gain="Полный контроль над Omega-4 и шанс на No One Left Behind." data-progress="52" data-trophies="66" data-list="Reaper IFF последним|3 апгрейда Normandy SR-2|Все лоялки|Legion сразу после IFF">
+<div class="card"><h2>4) В Mass Effect 2 подготовка важнее самого финала</h2><p>До миссии <b>Reaper IFF</b> нужно считать, что игра еще находится в доке: все апгрейды Нормандии куплены, лояльность закрыта, а мораль достаточно высока, чтобы мирно разрулить самые токсичные конфликты экипажа.</p>
+<img class="phaseImg" src="image2.png" alt="Схема критических апгрейдов Нормандии и лояльности экипажа в Mass Effect 2">
+<div class="nodes">
+<div class="node"><h4>Jacob</h4><p><b>Heavy Ship Armor</b>. Без нее лазерный удар на подлете мгновенно убивает Джека.</p></div>
+<div class="node"><h4>Tali</h4><p><b>Multicore Shielding</b>. Без щитов корабль теряет одного спутника уже на кладбище обломков.</p></div>
+<div class="node"><h4>Garrus</h4><p><b>Thanix Cannon</b>. Без пушки крейсер Коллекционеров ломает идеальный ран.</p></div>
+</div>
+<div class="splits"><li><time>До IFF</time>Все апгрейды, все лоялки, все нужные побочки и сканирование ресурсов.</li><li><time>IFF</time>Берете систему только тогда, когда реально больше нечего готовить.</li><li><time>Сразу после</time>Активируете Легиона и уводите его на личную миссию, пока игра еще дает этот люфт.</li></div>
+<div class="phaseChk">
+<div class="phaseChkHead"><span>Чек-лист фазы</span><b>Фаза 4</b></div>
+<ul class="phaseTodo">
+<li><label><input data-k="p4_upgrades" type="checkbox">Купил все три критических апгрейда Normandy SR-2 до Reaper IFF</label></li>
+<li><label><input data-k="p4_loyalty" type="checkbox">Закрыл лояльность и заранее подготовил мораль под конфликты Miranda/Jack и Tali/Legion</label></li>
+</ul>
+</div>
+<div class="phaseDeep" id="deep-s4"><h3>Expanded Phase Guide</h3><details class="pdfAcc"><summary><span>Что реально делает таймер после IFF</span><small>Точка невозврата</small></summary><div class="pdfAccBody"><p>После возврата с <b>Reaper IFF</b> игра запускает скрытый обратный отсчет. Обычно он дает ровно одну нормальную миссию, которую и стоит потратить на лоялку Легиона.</p><p>Как только окно закрывается, Коллекционеры берут Нормандию на абордаж. С этого момента любое лишнее задание уже начинает убивать похищенный экипаж.</p></div></details>
+<details class="pdfAcc"><summary><span>Почему лояльность важнее почти всего</span><small>Психология экипажа</small></summary><div class="pdfAccBody"><p>Лояльность в ME2 влияет не только на личные сцены, но и на выживание персонажей в самой Suicide Mission. Нелояльный специалист может сорвать роль даже при правильном выборе класса.</p><p>Отдельно держите мораль на уровне, достаточном для мирного урегулирования конфликтов <b>Miranda vs Jack</b> и <b>Tali vs Legion</b>. Потерять лояльность на этом этапе слишком дорого для финала и для импортов в ME3.</p></div></details></div></div>
+</section>
+
+<section class="scene" id="s5" data-short="05" data-phase="Фаза 5/8" data-title="Suicide Mission по математике" data-obj="Раздать роли так, чтобы игра не нашла, кого убить." data-risk="Одна неправильная роль или лишняя миссия после похищения ломает No One Left Behind." data-gain="Стопроцентное выживание команды и лучший импорт в ME3." data-progress="68" data-trophies="82" data-list="Vent: Tali/Legion/Kasumi|Biotic: Jack/Samara/Morinth|Escort: Mordin/Tali/Kasumi/Jack|Hold the Line >= 2.0">
+<div class="card"><h2>5) Suicide Mission выигрывается таблицей, а не героизмом</h2><p>Финал второй части выглядит как постановка на импровизацию, но внутри него почти все считается формулами: кто лоялен, кто подходит на роль, кого вы забрали на босса и какой средний оборонительный вес остался позади.</p>
+<div class="nodes">
+<div class="node"><h4>Фаза 1</h4><p><b>Vent specialist:</b> только Tali, Legion или Kasumi. Лидер огневой группы: Garrus, Miranda или Jacob.</p></div>
+<div class="node"><h4>Фаза 2</h4><p><b>Biotic bubble:</b> только Jack, Samara или Morinth. Эскорт экипажа лучше отдавать слабому, но лояльному бойцу.</p></div>
+<div class="node"><h4>Фаза 3</h4><p><b>Hold the Line:</b> оставьте Garrus, Grunt и Zaeed в тылу. Средний балл обороны должен быть не ниже 2.0.</p></div>
+</div>
+<div class="code"><b>Формула финала:</b> после похищения экипажа идите в <code>Omega-4 Relay</code> без лишних заданий, а на финального босса забирайте не тяжелых якорей обороны, а слабых или средних спутников.</div>
+<div class="phaseChk">
+<div class="phaseChkHead"><span>Чек-лист фазы</span><b>Фаза 5</b></div>
+<ul class="phaseTodo">
+<li><label><input data-k="p5_roles" type="checkbox">Раздал роли только лояльным и действительно подходящим специалистам</label></li>
+<li><label><input data-k="p5_omega" type="checkbox">После похищения экипажа ушел в Omega-4 без жадности к побочкам</label></li>
+</ul>
+</div>
+<div class="phaseDeep" id="deep-s5"><h3>Expanded Phase Guide</h3><details class="pdfAcc"><summary><span>No One Left Behind и тайминг экипажа</span><small>Самое частое падение рана</small></summary><div class="pdfAccBody"><p>Идеальный сценарий прост: после абордажа Коллекционеров не делайте вообще ничего лишнего и сразу прыгайте через ретранслятор. Один-два лишних квеста уже начинают перемалывать экипаж, а после четырех живых почти не остается.</p><p>Если ваша цель не просто пройти игру, а сохранить максимально сильный импорт в ME3, этот отрезок нельзя играть «по настроению».</p></div></details>
+<details class="pdfAcc"><summary><span>Как держать Hold the Line</span><small>Практическая математика</small></summary><div class="pdfAccBody"><p>Главные якоря обороны у лояльного отряда: <b>Grunt</b>, <b>Zaeed</b> и <b>Garrus</b>. Их выгоднее оставлять на рубеже, а на босса брать менее тяжелых спутников.</p><p>Игра имеет собственный приоритет смертей, и первыми обычно умирают самые хрупкие участники. Поэтому отправка, например, Мордина в эскорт экипажа часто является не «слабым» решением, а математически самым безопасным.</p></div></details></div></div>
+</section>
+<section class="scene" id="s6" data-short="06" data-phase="Фаза 6/8" data-title="ME3: 7400 TMS и порядок миссий" data-obj="Выжать максимум военных ресурсов до Cerberus HQ и не провалить срочные побочки." data-risk="Ранний Priority или недобор DLC/сканов срезают идеальный финал." data-gain="Сцена выживания Шепарда и максимально полный исход войны." data-progress="84" data-trophies="109" data-list="7400 TMS|Priority-миссии в конце акта|Все DLC обязательны|Мир гетов и кварианцев">
+<div class="card"><h2>6) Mass Effect 3 наказывает не сложностью, а порядком</h2><p>В Legendary Edition показатель готовности галактики навсегда зафиксирован на 100%, поэтому вам нужен не мультиплеер, а чистая сумма ресурсов. Цель одна: подойти к <b>Priority: Cerberus Headquarters</b> с запасом не ниже <b>7400 TMS</b>.</p>
+<div class="grid2"><ul><li><b>Priority — последними:</b> сначала чистите журнал текущего акта, потом толкайте сюжет.</li><li><b>DLC обязательны:</b> <i>From Ashes</i>, <i>Leviathan</i>, <i>Omega</i> и <i>Citadel</i> дают слишком много ресурсов, чтобы их пропускать.</li></ul><ul><li><b>Сканирование:</b> закрывайте туманности и артефакты по мере открытия карты, а не после Кроноса.</li><li><b>Rannoch:</b> мир между гетами и кварианцами окупается тысячами TMS и требует аккуратной базы из ME2.</li></ul></div>
+<div class="code"><b>Снимок ресурсов:</b> игра фиксирует итоговую сумму в момент запуска <code>Priority: Cerberus Headquarters</code>. Всё найденное после этого на концовки уже не работает.</div>
+<div class="tags"><span>7400 TMS</span><span>100% Readiness</span><span>DLC must-have</span><span>Rannoch peace</span></div>
+<div class="phaseChk">
+<div class="phaseChkHead"><span>Чек-лист фазы</span><b>Фаза 6</b></div>
+<ul class="phaseTodo">
+<li><label><input data-k="p6_priority" type="checkbox">Перед каждым Priority-блоком вычищал журнал и срочные побочки до нуля</label></li>
+<li><label><input data-k="p6_tms" type="checkbox">Довел военные ресурсы до 7400+ до старта штурма штаба Цербера</label></li>
+</ul>
+</div>
+<div class="phaseDeep" id="deep-s6"><h3>Expanded Phase Guide</h3><details class="pdfAcc"><summary><span>Самые ценные развилки TMS</span><small>Политический слой</small></summary><div class="pdfAccBody"><p>Крупнейшие качели по ресурсам сидят в двух блоках: <b>генофаг</b> и <b>конфликт гетов с кварианцами</b>. Первый дает суровый моральный выбор, второй требует заранее спасенных Легиона и Тали, мирно закрытого конфликта в ME2 и правильных действий на Раннохе.</p><p>Если хотя бы одна из этих линий сломана, добрать 7400 становится заметно тяжелее и приходится компенсировать всё сканированием и почти полным зачистным маршрутом.</p></div></details>
+<details class="pdfAcc"><summary><span>Почему Priority-миссии нужно откладывать</span><small>Скрытая срочность</small></summary><div class="pdfAccBody"><p>Маркер <b>Priority</b> выглядит как совет идти туда сейчас, но по факту именно он чаще всего и убивает побочный контент. После некоторых сюжетных шагов игра тихо закрывает второстепенные задания и убирает персонажей со сцены.</p><p>Поэтому безопасный принцип в ME3 обратный: сначала локальная уборка сектора, потом основная история.</p></div></details></div></div>
+</section>
+
+<section class="scene" id="s7" data-short="07" data-phase="Фаза 7/8" data-title="Боевые трофеи и глобальный гринд" data-obj="Добрать ситуативные ачивки, пока профиль еще можно удобно фармить через чекпойнты." data-risk="Часть боевых трофеев считает только способности самого Шепарда, а не команды." data-gain="Чистая зачистка ME3 и закрытие хвостов Legendary Edition." data-progress="94" data-trophies="120" data-list="Hijacker|Mail Slot|Sky High|Pyromaniac">
+<div class="card"><h2>7) Добивка здесь быстрее, чем кажется</h2><p>Последний крупный блок не про сюжет, а про точечные боевые условия и профильные счетчики. Главное понять, какие вещи считаются глобально, а какие игра засчитывает только если действие сделал сам Шепард.</p>
+<div class="nodes">
+<div class="node"><h4>Hijacker</h4><p>Снимите щиты Атласу через <b>Overload</b>, разбейте стекло кабины, убейте пилота и только потом садитесь внутрь.</p></div>
+<div class="node"><h4>Mail Slot</h4><p>Десять убийств через щель щита Guardian лучше фармить на удобном чекпойнте с перезагрузкой.</p></div>
+<div class="node"><h4>Sky High / Pyromaniac</h4><p>В ME3 учитываются только способности, которые прожал именно Шепард. Бонусные силы решают проблему неподходящего класса.</p></div>
+</div>
+<ul><li><b>Профильные счетчики:</b> часть прогресса переносится между играми и переживает перезагрузки, поэтому ручные сейвы у хороших чекпойнтов экономят часы.</li><li><b>Paramour-страховка:</b> перед финальными романами держите отдельные сейвы, если хотите выбивать трофей без поломки личного канона.</li><li><b>Melee и убийства:</b> глобальная статистика Legendary Edition щедрее, чем кажется, но ее проще добивать точечно, чем надеяться на естественный хвост.</li></ul>
+<div class="phaseChk">
+<div class="phaseChkHead"><span>Чек-лист фазы</span><b>Фаза 7</b></div>
+<ul class="phaseTodo">
+<li><label><input data-k="p7_combat" type="checkbox">Добил ситуативные боевые трофеи через удобные чекпойнты и бонусные силы</label></li>
+<li><label><input data-k="p7_profile" type="checkbox">Разобрался, какие счетчики глобальные, и не тратил лишние прохождения на фарм</label></li>
+</ul>
+</div>
+<div class="phaseDeep" id="deep-s7"><h3>Expanded Phase Guide</h3><details class="pdfAcc"><summary><span>Что реально фармить через перезагрузку</span><small>Экономия времени</small></summary><div class="pdfAccBody"><p><b>Mail Slot</b>, часть убийств по профилю и многие накопительные задачи спокойно добиваются через перезапуск одного и того же удобного чекпойнта. Это особенно полезно, если основной маршрут уже закончен, а не хочется растягивать ран на часы ради нескольких штук.</p><p>Идея простая: выбираете момент с понятной группой врагов, выполняете условие, перезагружаетесь и повторяете, пока профиль не отдаст достижение.</p></div></details>
+<details class="pdfAcc"><summary><span>Почему бонусные силы критичны</span><small>ME3-нюанс</small></summary><div class="pdfAccBody"><p>В отличие от ME1, где многое может добивать и отряд, в ME3 часть боевых трофеев засчитывается только за личные касты Шепарда. Если ваш основной класс не умеет поднимать врагов в воздух или поджигать их, без бонусного навыка фарм становится бессмысленным.</p><p>Проверьте это заранее в медотсеке Нормандии и просто поставьте нужную силу на отдельный фарм-сетап.</p></div></details></div></div>
+</section>
+
+<section class="scene" id="s8" data-short="08" data-phase="Фаза 8/8" data-title="NG+ в ME3 и финальная точка" data-obj="Закрыть Gunsmith, сохранить архивные сейвы и поставить печать 100% на всей сборке." data-risk="Без New Game+ трофей Gunsmith упирается в потолок V ранга." data-gain="Все три платины, список Legendary Edition и чистый финал трилогии." data-progress="100" data-trophies="127" data-list="Gunsmith до X ранга|ME3 New Game+|Архивные сейвы|Полный 100%">
+<div class="card"><h2>8) Последний рывок: Gunsmith и финальный архив</h2><p>Главный постскриптум всей коллекции лежит в третьей части: <b>Gunsmith</b> нельзя честно взять в первом прохождении, потому что обычная кампания режет улучшения оружия на уровне <b>V</b>. Нужен импорт в <b>New Game+</b> после титров ME3.</p>
+<ul><li><b>ME3 NG+:</b> импортируйте завершенного персонажа и поднимайте одну модель оружия до <b>ранга X</b>.</li><li><b>Архив сейвов:</b> не удаляйте сейвы перед Илом, Omega-4 и Cerberus HQ даже после трофеев. Это страховка под любые хвосты и альтернативные концовки.</li><li><b>Финальный проход по спискам:</b> проверьте отдельно ME1, ME2, ME3 и общий список Legendary Edition, чтобы не оставить одинокий профильный хвост.</li></ul>
+<div class="tags"><span>Gunsmith</span><span>New Game+</span><span>3 платины</span><span>Legendary Edition list</span></div>
+<div class="phaseChk">
+<div class="phaseChkHead"><span>Чек-лист фазы</span><b>Фаза 8</b></div>
+<ul class="phaseTodo">
+<li><label><input data-k="p8_ngp" type="checkbox">Закрыл ME3 New Game+ и довел оружие до X ранга для Gunsmith</label></li>
+<li><label><input data-k="p8_finish" type="checkbox">Досверил все четыре списка, сохранил ключевые сейвы и финально закрыл 100%</label></li>
+</ul>
+</div>
+<div class="phaseDeep" id="deep-s8"><h3>Expanded Phase Guide</h3><details class="pdfAcc"><summary><span>Что оставить в архиве сейвов</span><small>Практический минимум</small></summary><div class="pdfAccBody"><p>Минимальный набор: <b>перед Илом</b> в ME1, <b>перед Omega-4 Relay</b> в ME2 и <b>перед Cerberus Headquarters</b> в ME3. Эти три точки перекрывают почти все риски: романы, финалы, TMS и альтернативные решения.</p><p>Если вдруг окажется, что профилю не хватило одного флага, такие сейвы экономят не часы, а целые повторные прохождения.</p></div></details>
+<details class="pdfAcc"><summary><span>Финальный смысл маршрута</span><small>Итог</small></summary><div class="pdfAccBody"><p>Идеальный ран по <i>Mass Effect Legendary Edition</i> строится не на чистой механике стрельбы, а на дисциплине: нужный диалог на старте ME1, правильный момент для Reaper IFF, правильный порядок Priority-миссий в ME3 и аккуратная работа с профильными достижениями.</p><p>Если все восемь фаз закрыты, вы получаете не просто три платины, а полностью собранную трилогию без потерянных импортов и с лучшим доступным финалом.</p></div></details></div>
+<div class="chk">
+<div class="chkhead"><span>Сводный чек-лист всех фаз</span><b id="done">0 / 16</b></div>
+<p class="chkHint">Когда отметите все восемь фаз, мини-апп покажет финальную карточку. Это общий трекер по маршруту, а не замена внутриигровому списку трофеев.</p>
+<ul class="todo todo-all">
+<li><label><input data-k="p1_route" type="checkbox">Выстроил одного Шепарда под весь маршрут<small class="ph">Фаза 1</small></label></li>
+<li><label><input data-k="p1_lock" type="checkbox">Залочил Insanity и ключевые сейвы<small class="ph">Фаза 1</small></label></li>
+<li><label><input data-k="p2_class" type="checkbox">Выбрал классы под каждую часть<small class="ph">Фаза 2</small></label></li>
+<li><label><input data-k="p2_bonus" type="checkbox">Подготовил бонусные силы и фарм-план<small class="ph">Фаза 2</small></label></li>
+<li><label><input data-k="p3_archivist" type="checkbox">Закрыл Archivist до первого вылета<small class="ph">Фаза 3</small></label></li>
+<li><label><input data-k="p3_me1" type="checkbox">Добрал Ally, мораль и X57<small class="ph">Фаза 3</small></label></li>
+<li><label><input data-k="p4_upgrades" type="checkbox">Поставил 3 апгрейда Нормандии<small class="ph">Фаза 4</small></label></li>
+<li><label><input data-k="p4_loyalty" type="checkbox">Закрыл лояльность и конфликты отряда<small class="ph">Фаза 4</small></label></li>
+<li><label><input data-k="p5_roles" type="checkbox">Раздал роли в Suicide Mission без ошибок<small class="ph">Фаза 5</small></label></li>
+<li><label><input data-k="p5_omega" type="checkbox">После похищения экипажа сразу ушел на Omega-4<small class="ph">Фаза 5</small></label></li>
+<li><label><input data-k="p6_priority" type="checkbox">Не ломал акты ранними Priority-миссиями<small class="ph">Фаза 6</small></label></li>
+<li><label><input data-k="p6_tms" type="checkbox">Довел TMS до 7400+<small class="ph">Фаза 6</small></label></li>
+<li><label><input data-k="p7_combat" type="checkbox">Добил боевые трофеи через чекпойнты<small class="ph">Фаза 7</small></label></li>
+<li><label><input data-k="p7_profile" type="checkbox">Использовал профильные счетчики без лишнего гринда<small class="ph">Фаза 7</small></label></li>
+<li><label><input data-k="p8_ngp" type="checkbox">Закрыл Gunsmith через ME3 New Game+<small class="ph">Фаза 8</small></label></li>
+<li><label><input data-k="p8_finish" type="checkbox">Финально закрыл все списки и сохранил архив сейвов<small class="ph">Фаза 8</small></label></li>
+</ul>
+<button class="rst" id="rst" type="button">Сбросить отметки</button>
+</div>
+</div>
+</section>
+</article>
+</div>
+<div class="madeBy" aria-label="Copyright">
+  <span>&copy; 2026 Made by</span>
+  <span class="madeByBrand">
+    <img class="madeByMark" src="Logo.svg" alt="Logo">
+    <img class="madeByWord" src="ACHIEVER.svg" alt="ACHIEVER">
+  </span>
+</div>
+</main>
+<div id="winModal" aria-hidden="true">
+  <div class="winCard">
+    <h3>Трилогия закрыта на 100%</h3>
+    <img id="winBadge" class="winBadge" src="badge-achievement.png" alt="Ачивка за прохождение Mass Effect Legendary Edition">
+    <small class="winNote">Финальная карточка за интерактивный маршрут</small>
+    <p>Все восемь фаз закрыты. Маршрут от Eden Prime до финала ME3 собран без критических пропусков.</p>
+    <div class="winActions">
+      <a id="winDownload" href="#" download="mass-effect-legendary-edition-achievement.png">Скачать ачивку</a>
+      <button id="winClose" type="button">Закрыть</button>
+    </div>
+  </div>
+</div>
+<script>
+(()=>{
+const tg=window.Telegram&&window.Telegram.WebApp?window.Telegram.WebApp:null;
+const setTheme=()=>{if(!tg)return;const p=tg.themeParams||{};if(p.bg_color)document.documentElement.style.setProperty('--tg-theme-bg-color',p.bg_color);if(p.text_color)document.documentElement.style.setProperty('--tg-theme-text-color',p.text_color);if(p.hint_color)document.documentElement.style.setProperty('--tg-theme-hint-color',p.hint_color);if(p.button_color)document.documentElement.style.setProperty('--tg-theme-button-color',p.button_color);if(p.button_text_color)document.documentElement.style.setProperty('--tg-theme-button-text-color',p.button_text_color);if(p.link_color)document.documentElement.style.setProperty('--tg-theme-link-color',p.link_color);if(p.secondary_bg_color)document.documentElement.style.setProperty('--tg-theme-secondary-bg-color',p.secondary_bg_color)};
+if(tg){tg.ready();tg.expand();setTheme();if(typeof tg.onEvent==='function')tg.onEvent('themeChanged',setTheme)}
+document.querySelectorAll('footer').forEach(el=>el.remove());
+const scenes=[...document.querySelectorAll('.scene')],hp=document.getElementById('hp'),ht=document.getElementById('ht'),ho=document.getElementById('ho'),hr=document.getElementById('hr'),hg=document.getElementById('hg'),hpr=document.getElementById('hpr'),hf=document.getElementById('hf'),hbar=document.getElementById('hbar'),rt=document.getElementById('rt'),ring=document.getElementById('ring'),hlist=document.getElementById('hlist'),timeline=document.getElementById('timeline'),mstep=document.getElementById('mstep'),mpercent=document.getElementById('mpercent'),mtitle=document.getElementById('mtitle'),mfill=document.getElementById('mfill'),mpeek=document.getElementById('mpeek'),hud=document.getElementById('hud'),winModal=document.getElementById('winModal'),winClose=document.getElementById('winClose'),winBadge=document.getElementById('winBadge'),winDownload=document.getElementById('winDownload');
+const btns=[];
+scenes.forEach((s,i)=>{s.dataset.i=i;const b=document.createElement('button');b.type='button';b.textContent=s.dataset.short||String(i+1).padStart(2,'0');b.onclick=()=>s.scrollIntoView({behavior:'smooth',block:'start'});timeline.appendChild(b);btns.push(b)});
+const trophyRu={
+  'Insanity I-III':'Безумие I-III',
+  'Paramour I-III':'Романтик I-III'
+};
+let checklistPercent=0,phaseDone=0,phaseTotal=8;
+const applyChecklistProgress=()=>{
+  const pct=Math.max(0,Math.min(100,checklistPercent));
+  hf.style.width=pct+'%';
+  hpr.textContent=pct+'%';
+  if(mfill)mfill.style.width=pct+'%';
+  if(mpercent)mpercent.textContent=pct+'%';
+  const ringPct=phaseTotal?phaseDone/phaseTotal:0;
+  ring.style.setProperty('--a',(ringPct*360)+'deg');
+  if(hbar)hbar.classList.toggle('empty',phaseDone===0);
+  ring.classList.toggle('empty',phaseDone===0);
+  rt.textContent=phaseDone+' / '+phaseTotal;
+};
+const list=(raw)=>{hlist.innerHTML='';(raw||'').split('|').map(v=>v.trim()).filter(Boolean).forEach(v=>{const li=document.createElement('li');li.textContent=trophyRu[v]||v;hlist.appendChild(li)})};
+const set=(i)=>{const s=scenes[i];if(!s)return;scenes.forEach((x,n)=>x.classList.toggle('active',n===i));btns.forEach((x,n)=>x.classList.toggle('on',n===i));hp.textContent=s.dataset.phase||'';ht.textContent=s.dataset.title||'';ho.textContent=s.dataset.obj||'';hr.textContent=s.dataset.risk||'';hg.textContent=s.dataset.gain||'';if(mstep)mstep.textContent=s.dataset.phase||'';if(mtitle)mtitle.textContent=s.dataset.title||'';list(s.dataset.list)};
+const mountAccordionCollapseButtons=()=>{document.querySelectorAll('.pdfAcc').forEach(acc=>{const body=acc.querySelector('.pdfAccBody');if(!body||body.querySelector('.accCollapse'))return;const wrap=document.createElement('div');wrap.className='accCollapseWrap';const btn=document.createElement('button');btn.type='button';btn.className='accCollapse';btn.textContent='Свернуть';btn.addEventListener('click',()=>{acc.open=false;const summary=acc.querySelector('summary');if(summary)summary.scrollIntoView({behavior:'smooth',block:'nearest'})});wrap.appendChild(btn);body.appendChild(wrap)})};
+mountAccordionCollapseButtons();
+const syncMobilePeek=()=>{if(!mpeek||!hud)return; if(window.innerWidth>980){mpeek.classList.remove('show');return;} const y=window.scrollY||document.documentElement.scrollTop||document.body.scrollTop||0; const threshold=hud.offsetTop+24; const show=y>threshold; mpeek.classList.toggle('show',show);};
+const resolveActiveScene=()=>{const anchor=window.innerHeight*.42;let fallback=0,min=Infinity;for(let i=0;i<scenes.length;i++){const r=scenes[i].getBoundingClientRect();if(r.top<=anchor&&r.bottom>anchor)return i;const d=Math.abs(r.top-anchor);if(d<min){min=d;fallback=i}}return fallback;};
+let activeScene=-1,raf=0;
+const updateActiveByScroll=()=>{const idx=resolveActiveScene();if(idx!==activeScene){activeScene=idx;set(idx)}};
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.intersectionRatio>.18)e.target.classList.add('show')})},{threshold:[.2,.55,.8],rootMargin:'-8% 0px -30% 0px'});
+scenes.forEach(s=>io.observe(s));
+const onScroll=()=>{syncMobilePeek();if(raf)return;raf=requestAnimationFrame(()=>{raf=0;updateActiveByScroll()})};
+syncMobilePeek();updateActiveByScroll();
+window.addEventListener('scroll',onScroll,{passive:true});
+window.addEventListener('resize',()=>{syncMobilePeek();updateActiveByScroll()});
+window.addEventListener('orientationchange',()=>{syncMobilePeek();updateActiveByScroll()});
+const key='mass_effect_le_miniapp_checklist_v1',inputs=[...document.querySelectorAll('[data-k]')],done=document.getElementById('done'),rst=document.getElementById('rst');
+const groups=inputs.reduce((m,i)=>{const k=i.dataset.k;if(!m[k])m[k]=[];m[k].push(i);return m},{});
+const keys=Object.keys(groups);
+const phaseGroups=keys.reduce((m,k)=>{const hit=/^p(\d+)_/.exec(k);if(!hit)return m;const p=Number(hit[1]);if(!m[p])m[p]=[];m[p].push(k);return m},{});
+const phaseOrder=Object.keys(phaseGroups).map(Number).sort((a,b)=>a-b);
+const refreshChecklistProgress=()=>{
+  phaseTotal=phaseOrder.length||0;
+  phaseDone=phaseOrder.filter(p=>phaseGroups[p].every(k=>(groups[k]||[]).every(i=>i.checked))).length;
+  checklistPercent=phaseTotal?Math.round((phaseDone/phaseTotal)*100):0;
+  applyChecklistProgress();
+};
+const draw=()=>{if(!done)return;const checked=keys.filter(k=>groups[k][0]&&groups[k][0].checked).length;done.textContent=checked+' / '+keys.length};
+const allDone=()=>keys.length>0&&keys.every(k=>groups[k].every(i=>i.checked));
+const openWinModal=()=>{if(!winModal)return;winModal.classList.add('show');winModal.setAttribute('aria-hidden','false');if(tg&&tg.HapticFeedback&&tg.HapticFeedback.notificationOccurred)tg.HapticFeedback.notificationOccurred('success')};
+const closeWinModal=()=>{if(!winModal)return;winModal.classList.remove('show');winModal.setAttribute('aria-hidden','true')};
+let wasAllDone=false;
+const save=()=>{const d={};keys.forEach(k=>d[k]=!!(groups[k][0]&&groups[k][0].checked));localStorage.setItem(key,JSON.stringify(d));refreshChecklistProgress();draw();const complete=allDone();if(complete&&!wasAllDone)openWinModal();if(!complete)closeWinModal();wasAllDone=complete};
+try{const raw=localStorage.getItem(key);if(raw){const d=JSON.parse(raw);keys.forEach(k=>{const v=!!d[k];groups[k].forEach(i=>i.checked=v)})}}catch(e){}
+wasAllDone=allDone();
+inputs.forEach(i=>i.addEventListener('change',()=>{const k=i.dataset.k;const v=i.checked;(groups[k]||[]).forEach(x=>x.checked=v);save()}));
+if(rst)rst.addEventListener('click',()=>{keys.forEach(k=>(groups[k]||[]).forEach(i=>i.checked=false));localStorage.removeItem(key);refreshChecklistProgress();draw();wasAllDone=false;closeWinModal()});
+const badgeFileName='mass-effect-legendary-edition-achievement.png';
+const badgeDownloadPath='badge-achievement.png';
+const tgPlatform=String((tg&&tg.platform)||'').toLowerCase();
+const isMobileTelegram=tgPlatform==='android'||tgPlatform==='ios'||/android|iphone|ipad|ipod/i.test(navigator.userAgent);
+const toAbsUrl=u=>{try{return new URL(u,window.location.href).href}catch(e){return u}};
+const triggerBlobDownload=async(url,name)=>{
+  const r=await fetch(url,{cache:'no-store'});
+  if(!r.ok)throw new Error('badge_fetch_failed');
+  const blob=await r.blob();
+  const blobUrl=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=blobUrl;
+  a.download=name;
+  a.rel='noopener';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(blobUrl),2000);
+};
+if(winDownload){
+  winDownload.href=badgeDownloadPath;
+  winDownload.setAttribute('download',badgeFileName);
+  winDownload.addEventListener('click',async e=>{
+    if(!isMobileTelegram)return;
+    e.preventDefault();
+    const absUrl=toAbsUrl(badgeDownloadPath);
+    if(tg&&typeof tg.openLink==='function'){
+      tg.openLink(absUrl,{try_instant_view:false});
+      return;
+    }
+    try{
+      await triggerBlobDownload(absUrl,badgeFileName);
+    }catch(err){
+      window.open(absUrl,'_blank','noopener');
+    }
+  });
+}
+if(winClose)winClose.addEventListener('click',closeWinModal);
+if(winModal)winModal.addEventListener('click',e=>{if(e.target===winModal)closeWinModal()});
+refreshChecklistProgress();draw();
+if(tg&&tg.MainButton){tg.MainButton.setText('Наверх');tg.MainButton.onClick(()=>window.scrollTo({top:0,behavior:'smooth'}));const sync=()=>window.scrollY>window.innerHeight*.8?tg.MainButton.show():tg.MainButton.hide();window.addEventListener('scroll',sync,{passive:true});sync()}
+})();
+</script>
+</body>
+</html>
