@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
@@ -54,7 +54,7 @@ p{margin:.2rem 0 .9rem;color:color-mix(in srgb,var(--tx) 87%,var(--mut))}
 .tags{display:flex;flex-wrap:wrap;gap:6px;margin:.7rem 0}.tags span{border:1px solid var(--bd);border-radius:999px;padding:.18rem .58rem;background:rgba(0,0,0,.15);font-size:.77rem}
 .grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 ul{margin:0;padding-left:1.1rem;display:grid;gap:4px}
-.nodes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.node{border:1px solid var(--bd);border-radius:10px;padding:.55rem;background:rgba(0,0,0,.14)}.node h4{margin:0 0 .25rem;color:var(--lnk);font-size:.9rem}.node p{margin:0;font-size:.81rem}
+.nodes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.node{border:1px solid var(--bd);border-radius:10px;padding:.55rem;background:rgba(0,0,0,.14)}.node h4{margin:0 0 .25rem;color:var(--lnk);font-size:.9rem}.node p{margin:0;font-size:.81rem}
 .splits{list-style:none;padding:0;margin:0;display:grid;gap:5px}.splits li{border:1px solid var(--bd);border-radius:9px;padding:.42rem .54rem;background:rgba(0,0,0,.13);font-size:.85rem}.splits li time{font-weight:700;color:var(--lnk);margin-right:.4rem;font-variant-numeric:tabular-nums}
 .code{border:1px dashed rgba(255,255,255,.35);border-radius:9px;padding:.5rem .6rem;background:rgba(0,0,0,.18);font-size:.84rem}
 .phaseImg{display:block;width:100%;max-width:100%;height:auto;border:1px solid var(--bd);border-radius:12px;background:rgba(255,255,255,.04);margin:.7rem 0 .8rem}
@@ -114,6 +114,7 @@ ul{margin:0;padding-left:1.1rem;display:grid;gap:4px}
 @media (max-width:980px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.layout{grid-template-columns:1fr}#mpeek{display:block}.accCollapseWrap{justify-content:stretch}.accCollapse{width:100%;padding:.52rem .7rem}#hud{position:relative;top:auto;margin-bottom:12px;background:var(--bg);backdrop-filter:none}.meta div{background:rgba(0,0,0,.22)}#timeline{display:flex;overflow:auto}#timeline button{min-width:52px}.nodes{grid-template-columns:repeat(2,minmax(0,1fr))}.scene{min-height:74vh;opacity:1;transform:none}}
 @media (max-width:720px){.stats,.grid2,.nodes{grid-template-columns:1fr}.scene{min-height:68vh}}
 @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+.class-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;background:rgba(255,255,255,.03);border:1px solid var(--bd);border-radius:12px;padding:16px;margin:.7rem 0 .8rem;font-family:"Space Grotesk",sans-serif;text-align:center;align-items:center}.class-grid-header{font-weight:700;font-size:.85rem;color:var(--tx);padding-bottom:8px;border-bottom:1px solid var(--bd)}.class-name{font-weight:600;text-align:left;color:var(--tx);font-size:.85rem}.badge{display:inline-block;width:100%;padding:6px 0;border-radius:8px;font-weight:700;font-size:.8rem;color:#fff}.badge-blue{background:#1a73e8}.badge-green{background:#81c995;color:#000}.badge-red{background:#d93025}.badge-grey{background:#dadce0;color:#000}@media (max-width:600px){.class-grid{grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;padding:10px}.class-grid-header,.class-name{font-size:.7rem}.badge{font-size:.65rem;padding:4px 0}}
 </style>
 </head>
 <body>
@@ -149,13 +150,43 @@ ul{margin:0;padding-left:1.1rem;display:grid;gap:4px}
 <details class="pdfAcc"><summary><span>Paramour без ловушки Liara</span><small>Что помнить</small></summary><div class="pdfAccBody"><div class="accBlock"><div class="accBlockTitle">Мини-чеклист</div><ul><li>Для ME2 выбирайте роман с полноценным членом экипажа: Миранда, Тали, Джек, Гаррус, Тейн или Джейкоб.</li><li>Если хотите финальный канон с Лиарой, сначала получите триггер <b>Paramour II</b>, а уже потом возвращайтесь к ней.</li><li>Оставьте сейв перед романтической точкой в ME1 и перед финалом ME2.</li></ul></div><div class="accBlock"><div class="accBlockTitle">Безопасный маршрут</div><p>Safest-вариант для профиля: получить обычный роман в ME1, во второй части выбрать надежного члена экипажа под <b>Paramour II</b>, а уже затем решать, хотите ли вы возвращаться к Лиаре ради канона в ME3. Так трофейный контур не зависит от спорного DLC-триггера.</p></div><div class="accBlock"><div class="accBlockTitle">Сейв и контроль</div><ul><li><b>Сейв-поинт:</b> отдельный файл перед Илом в ME1 и отдельный файл до пролета через <code>Omega-4 Relay</code> в ME2.</li><li><b>Порядок:</b> ME1 роман -> ME2 роман с членом экипажа -> трофей сработал -> только потом возвращение к Лиаре, если это ваш канон.</li><li><b>Контрольный маркер:</b> <b>Paramour II</b> должен выпасть еще во второй части, до импорта в ME3.</li><li><b>Если не выпало:</b> не идите дальше по импорту, а откатывайтесь к сейву перед финальной романтической точкой ME2.</li></ul></div><div class="accBlock"><div class="accBlockTitle">3 критические ошибки</div><ul><li>Полагаться только на <i>Lair of the Shadow Broker</i> и ждать, что Лиара сама закроет <b>Paramour II</b>.</li><li>Выбрать «легкий» роман вроде Келли, Самары или Моринт и считать его полноценным триггером.</li><li>Слишком рано возвращаться к Лиаре и случайно обрубить нужную последовательность для профильного трофея.</li></ul></div></div></details></div></div>
 </section>
 
-<section class="scene" id="s2" data-short="02" data-phase="Фаза 2/8" data-title="Классы и боевой каркас" data-obj="Выбрать удобный набор классов и бонусных навыков под три разные боевые системы." data-risk="Один и тот же стиль не одинаково силен в ME1, ME2 и ME3." data-gain="Стабильный Insanity-маршрут без насилия над билдом." data-progress="24" data-trophies="32" data-list="ME1: Soldier или Adept|ME2: Sentinel или Infiltrator|ME3: Vanguard|Garrus + N7 Typhoon">
+<section class="scene" id="s2" data-short="02" data-phase="Фаза 2/8" data-title="Классы и боевой каркас" data-obj="Выбрать удобный набор классов и бонусных навыков под три разные боевые системы." data-risk="Один и тот же стиль не одинаково силен в ME1, ME2 и ME3." data-gain="Стабильный Insanity-маршрут без насилия над билдом." data-progress="24" data-trophies="32" data-list="ME1: Soldier или Adept|ME2: Sentinel, Infiltrator или Инженер|ME3: Vanguard или Инженер|Garrus + N7 Typhoon">
 <div class="card"><h2>2) Подберите класс под конкретную игру, а не под бренд серии</h2><p>Баланс между частями меняется слишком сильно, поэтому лучше строить ожидания не вокруг любимой роли, а вокруг того, как игра считает щиты, броню, биотику и контроль.</p>
-<img class="phaseImg" src="image1.png" alt="Схема маршрута по классам и достижениям в Mass Effect Legendary Edition">
+<div class="class-grid">
+  <div class="class-grid-header" style="text-align:left;">Класс</div>
+  <div class="class-grid-header">Mass Effect 1</div>
+  <div class="class-grid-header">Mass Effect 2</div>
+  <div class="class-grid-header">Mass Effect 3</div>
+  <div class="class-name">Солдат</div>
+  <div><span class="badge badge-blue">Отлично</span></div>
+  <div><span class="badge badge-green">Хорошо</span></div>
+  <div><span class="badge badge-blue">Отлично</span></div>
+  <div class="class-name">Адепт</div>
+  <div><span class="badge badge-blue">Отлично</span></div>
+  <div><span class="badge badge-red">Слабо</span></div>
+  <div><span class="badge badge-green">Хорошо</span></div>
+  <div class="class-name">Страж</div>
+  <div><span class="badge badge-green">Хорошо</span></div>
+  <div><span class="badge badge-blue">Отлично</span></div>
+  <div><span class="badge badge-green">Хорошо</span></div>
+  <div class="class-name">Разведчик</div>
+  <div><span class="badge badge-green">Хорошо</span></div>
+  <div><span class="badge badge-blue">Отлично</span></div>
+  <div><span class="badge badge-blue">Отлично</span></div>
+  <div class="class-name">Штурмовик</div>
+  <div><span class="badge badge-grey">Средне</span></div>
+  <div><span class="badge badge-green">Хорошо</span></div>
+  <div><span class="badge badge-blue">Отлично</span></div>
+  <div class="class-name">Инженер</div>
+  <div><span class="badge badge-red">Слабо</span></div>
+  <div><span class="badge badge-blue">Отлично</span></div>
+  <div><span class="badge badge-blue">Отлично</span></div>
+</div>
 <div class="nodes">
 <div class="node"><h4>Mass Effect 1</h4><p><b>Soldier</b> дает простую выживаемость, а <b>Adept</b> ломает бой контролем и биотикой через щиты.</p></div>
 <div class="node"><h4>Mass Effect 2</h4><p><b>Sentinel</b> безопаснее всего на Insanity: снимает все типы защиты и переживает ошибки через Tech Armor.</p></div>
 <div class="node"><h4>Mass Effect 3</h4><p><b>Vanguard</b> сверхсилен при грамотном тайминге, а Гаррус с <b>N7 Typhoon</b> превращает финал в тир.</p></div>
+<div class="node"><h4>Инженер</h4><p><b>Ультимативен со второй части:</b> мастер комбо-взрывов и контроля боя за счет снятия любой брони и дронов.</p></div>
 </div>
 <div class="tags"><span>ME2 hardest</span><span>Tech Armor</span><span>Vanguard + Nova</span><span>God Garrus</span></div><div class="phaseChk">
 <div class="phaseChkHead"><span>Чек-лист фазы</span><b>Фаза 2</b></div>
